@@ -1,28 +1,29 @@
 'use strict'
 
-require('dotenv').config()
-const mySql = require('mysql')
 const jsonHandler = require('./lib/jsonHandler')
+const dbHandler = require('./lib/dbHandler')
 const path = require('path')
 
-// read files & store in DB at specific console input
+const getDirectory = () => {
+    const userInput = process.argv[2]
+    
+    if (!userInput) {
+        console.log('Please enter directory path')
+        process.exit()
+    }
 
-const connection = mySql.createConnection({
-    host: process.env.hostname,
-    user: process.env.mysql_username,
-    password: process.env.mysql_password
-})
+    return userInput
+}
 
-connection.connect(async err => {
-    if (err) throw err
-
-    const fileDirectory = path.join(__dirname, 'jsonFiles')
+;(async () => {
+    const fileDirectory = getDirectory()
+    
     const fileNames = await jsonHandler.getFileNames(fileDirectory)
     
     const filePaths = fileNames.map(fileName => 
         path.join(fileDirectory, fileName))
     const objects = 
         await jsonHandler.getObjectsFromFiles(filePaths)
-
-    console.log(objects)
-})
+    
+    dbHandler.storeFileContents(objects)
+})()
