@@ -17,7 +17,6 @@ const getDirectory = () => {
 
 ;(async () => {
     const fileDirectory = getDirectory()
-    
     const fileNames = await jsonHandler.getFileNames(fileDirectory)
     
     const filePaths = fileNames.map(fileName => 
