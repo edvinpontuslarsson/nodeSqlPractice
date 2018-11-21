@@ -21,6 +21,7 @@ const getDirectory = () => {
     
     const filePaths = fileNames.map(fileName => 
         path.join(fileDirectory, fileName))
+    
     const objects = 
         await jsonHandler.getObjectsFromFiles(filePaths)
     
